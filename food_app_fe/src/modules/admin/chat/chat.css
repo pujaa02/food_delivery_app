@@ -1,0 +1,50 @@
+.chat_container {
+  position: absolute;
+  top: 12rem;
+  right: 30rem;
+  background-color: rgb(219, 216, 216);
+  padding: 10px;
+  border-radius: 15px;
+}
+.upper_container {
+  width: 600px;
+  height: 600px;
+  overflow-y: scroll;
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+input {
+  width: 500px;
+  height: 40px;
+  border-radius: 5px;
+}
+.sendbtn {
+  margin-top: 8px;
+  margin-left: 15px;
+  background-color: rgb(158, 176, 214);
+  height: 37px;
+  width: 65px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 20px;
+}
+.sendermsg {
+  background-color: rgb(57, 134, 57);
+  margin: 20px;
+  padding: 10px 15px;
+  margin-left: 18rem;
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: bold;
+}
+.receivermsg {
+  background-color: rgb(150, 147, 147);
+  margin: 20px;
+  padding: 10px 15px;
+  width: 250px;
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: bold;
+}

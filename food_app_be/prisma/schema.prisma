@@ -1,0 +1,247 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
+  engineType      = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model permission {
+  id                      Int                       @id @default(autoincrement())
+  permission_name         String
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deletedAt               DateTime?
+  user_permission         user_permission[]
+  role_permission_feature role_permission_feature[]
+}
+
+model role {
+  id                      Int                       @id @default(autoincrement())
+  role_name               String                    @unique
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deletedAt               DateTime?
+  role_permission_feature role_permission_feature[]
+  user                    user[]
+}
+
+model feature {
+  id                      Int                       @id @default(autoincrement())
+  feature_name            String                    @unique
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deletedAt               DateTime?
+  role_permission_feature role_permission_feature[]
+  user_permission         user_permission[]
+}
+
+model role_permission_feature {
+  id            Int        @id @default(autoincrement())
+  role_id       Int
+  permission_id Int
+  feature_id    Int
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  deletedAt     DateTime?
+  role          role       @relation(fields: [role_id], references: [id])
+  permission    permission @relation(fields: [permission_id], references: [id])
+  feature       feature    @relation(fields: [feature_id], references: [id])
+}
+
+model user {
+  id              Int               @id @default(autoincrement())
+  fname           String
+  lname           String?
+  email           String            @unique
+  phone           String
+  gender          String
+  bd              DateTime          @db.Date
+  password        String?
+  access_key      String?
+  role_id         Int
+  city            String
+  state           String
+  street          String
+  pincode         String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+  user_permission user_permission[]
+  cart            cart[]
+  driver          driver[]
+  order           order[]
+  rating          rating[]
+  restaurant      restaurant[]
+  role            role              @relation(fields: [role_id], references: [id])
+  order_product   order_product[]
+}
+
+model restaurant {
+  id        Int       @id @default(autoincrement())
+  user_id   Int
+  name      String
+  phone     String
+  address   String
+  image     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  menu      menu[]
+  user      user      @relation(fields: [user_id], references: [id])
+
+  @@index([name])
+}
+
+model menu {
+  id            Int             @id @default(autoincrement())
+  restaurant_id Int
+  item_name     String
+  description   String?
+  price         Int
+  image         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+  cart          cart[]
+  restaurant    restaurant      @relation(fields: [restaurant_id], references: [id])
+  rating        rating[]
+  order_product order_product[]
+}
+
+model driver {
+  id           Int            @id @default(autoincrement())
+  user_id      Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
+  delivery     delivery[]
+  notification notification[]
+  user         user           @relation(fields: [user_id], references: [id])
+}
+
+model order_product {
+  id         Int        @id @default(autoincrement())
+  user_id    Int
+  menu_id    Int
+  total_item Int
+  order_id   Int
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  deletedAt  DateTime?
+  user       user       @relation(fields: [user_id], references: [id])
+  menu       menu       @relation(fields: [menu_id], references: [id])
+  order      order      @relation(fields: [order_id], references: [id])
+}
+
+model order {
+  id            Int             @id @default(autoincrement())
+  user_id       Int
+  address       String
+  phone         String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+  delivery      delivery[]
+  payment       payment[]
+  user          user            @relation(fields: [user_id], references: [id])
+  order_product order_product[]
+  notification  notification[]
+}
+
+model delivery {
+  id              Int            @id @default(autoincrement())
+  order_id        Int
+  driver_id       Int
+  delivery_status String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
+  order           order          @relation(fields: [order_id], references: [id])
+  driver          driver         @relation(fields: [driver_id], references: [id])
+}
+
+model payment {
+  id             Int       @id @default(autoincrement())
+  order_id       Int
+  payment_method String
+  total_amount   Float
+  status         String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+  order          order     @relation(fields: [order_id], references: [id])
+}
+
+model rating {
+  id        Int       @default(autoincrement())
+  user_id   Int
+  menu_id   Int
+  content   String?   @db.VarChar(1000)
+  rating    Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  user      user      @relation(fields: [user_id], references: [id])
+  menu      menu      @relation(fields: [menu_id], references: [id])
+
+  @@id([user_id, menu_id])
+}
+
+model cart {
+  id        Int       @default(autoincrement())
+  user_id   Int
+  menu_id   Int
+  count     Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  user      user      @relation(fields: [user_id], references: [id])
+  menu      menu      @relation(fields: [menu_id], references: [id])
+
+  @@id([user_id, menu_id])
+}
+
+model chat {
+  id          Int       @id @default(autoincrement())
+  sender_id   Int
+  receiver_id Int
+  message     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+}
+
+model notification {
+  id        Int       @id @default(autoincrement())
+  order_id  Int
+  driver_id Int
+  message   String
+  isRead    Boolean
+  isDeleted Boolean
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  order     order     @relation(fields: [order_id], references: [id])
+  driver    driver    @relation(fields: [driver_id], references: [id])
+
+  @@index([order_id, driver_id])
+}
+
+model user_permission {
+  id            Int        @id @default(autoincrement())
+  user_id       Int
+  permission_id Int
+  feature_id    Int
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  deletedAt     DateTime?
+  user          user       @relation(fields: [user_id], references: [id])
+  permission    permission @relation(fields: [permission_id], references: [id])
+  feature       feature    @relation(fields: [feature_id], references: [id])
+
+  @@unique([user_id, permission_id])
+}

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "pretty": true,
+    "sourceMap": true,
+    "target": "ES2022",
+    "outDir": "./dist",
+    "baseUrl": "./lib",
+    "strict": true,
+    "typeRoots": ["./types", "./node_modules/@types"]
+  },
+  "exclude": ["node_modules"]
+}

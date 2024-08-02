@@ -1,0 +1,24 @@
+{
+    "development": {
+      "username": "postgres",
+      "password": "root@258",
+      "database": "food_delivery",
+      "host": "192.168.10.119",
+      "dialect": "postgres"
+    },
+    "test": {
+      "username": "root",
+      "password": null,
+      "database": "database_test",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    },
+    "production": {
+      "username": "root",
+      "password": null,
+      "database": "database_production",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    }
+  }
+  
